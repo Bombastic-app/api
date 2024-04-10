@@ -12,8 +12,14 @@ export default class CardsController {
     this.collection = firebaseService.db().collection(this.ref);
   }
 
+  /**
+   * @index
+   * @description Get all cards
+   * @responseHeader 200 {string} content-type application/json 
+   */
   async index() {
-    const cards = await this.collection.get()
-    return cards.docs.map((card) => card.data())
+    return this.collection.get().then((cards) => {
+      return cards.docs.map((card) => card.data())
+    })
   }
 }
