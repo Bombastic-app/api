@@ -9,6 +9,7 @@
 
 const CardsController = () => import('#controllers/cards_controller')
 const PlayersController = () => import('#controllers/players_controller')
+const GamesController = () => import('#controllers/games_controller')
 import router from '@adonisjs/core/services/router'
 import AutoSwagger from "adonis-autoswagger";
 import swagger from "#config/swagger";
@@ -31,5 +32,12 @@ router.get('/', async () => {
   }
 })
 
+/** Cards */
 router.get('cards', [CardsController, 'index'])
+router.get('card/:id', [CardsController, 'get'])
+
+/** Players */
 router.post('players/add', [PlayersController, 'add'])
+
+/** Games */
+router.get('games', [GamesController, 'index'])

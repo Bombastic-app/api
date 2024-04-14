@@ -198,7 +198,7 @@
     eslint-plugin-unicorn "^47.0.0"
     jsonc-eslint-parser "^2.4.0"
 
-"@adonisjs/eslint-plugin@1.3.0":
+"@adonisjs/eslint-plugin@1.3.0", "@adonisjs/eslint-plugin@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@adonisjs/eslint-plugin/-/eslint-plugin-1.3.0.tgz#779eb586e142b6d8e05bb24c015b74f8337ec7fe"
   integrity sha512-LpN85yyuKkfo4t5PlE2Pij1GU3BcFh15cOH6BK7iDDcMkR6KduXB90hYiRu013EVIH+/sfxP5k2VjhBRc31Mqw==

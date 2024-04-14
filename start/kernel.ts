@@ -9,6 +9,7 @@
 */
 
 import FirebaseService from '#services/firebase_service'
+import GameService from '#services/game_service'
 import router from '@adonisjs/core/services/router'
 import server from '@adonisjs/core/services/server'
 
@@ -41,3 +42,4 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  */
 export const middleware = router.named({})
 export const firebaseService = new FirebaseService();
+export const gameService = new GameService('XOnB0bKnYoL8bAoyzG8C');
