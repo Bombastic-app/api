@@ -8,7 +8,7 @@ export default class GameService {
 
   constructor(gameCode: string) {
     this.gameCode = gameCode;
-    firebaseService.db().collection(`groups/123456/games/${this.gameCode}/players`).get()
+    firebaseService.db().collection(`games/${this.gameCode}/players`).get()
     .then((players) => {
       this.players = players.docs.map((player) => player.data())
       this.init()
@@ -21,14 +21,9 @@ export default class GameService {
 
   private init() {
     this.game = new Game(this.players[0]);
-    firebaseService.db().collection(`groups/123456/games/${this.gameCode}/players`).doc('Lmy34r3iRMJkUYBORz2Q').set({
-      screen: 'Crocrotte joue'
-    })
     return 'sucess'
   }
 
   async getPlayers() {
   }
-
-
 }

@@ -41,3 +41,5 @@ router.post('players/add', [PlayersController, 'add'])
 
 /** Games */
 router.get('games', [GamesController, 'index'])
+router.post('game/create', [GamesController, 'create'])
+router.post('game/join', [GamesController, 'join'])
