@@ -13,7 +13,7 @@ export default class PlayersController {
   add({ request }: HttpContext) {
     const body = request.body()
 
-    firebaseService.db().collection(`groups/${body.groupId}/games/${body.gameId}/players`).doc(body.playerId).set({
+    firebaseService.db().collection(`games/${body.gameId}/players`).doc(body.playerId).set({
       pseudo: body.pseudo
     }).then(() => {
       return 'success'
