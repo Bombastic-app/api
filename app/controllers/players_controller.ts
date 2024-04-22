@@ -21,4 +21,15 @@ export default class PlayersController {
       console.log(error);
     }) 
   }
+
+  /**
+   * @generateId
+   * @method POST
+   * @description Generate a new player id
+   */
+  generateId({ request, response }: HttpContext) {
+    const body = request.body()
+    
+    return response.json({ playerId: firebaseService.db().collection(`games/${body.gameCode}/players`).doc().id})
+  }
 }

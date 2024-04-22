@@ -22,6 +22,8 @@ export default class GamesController {
    */
   async create({ request, response }: HttpContext) {
     const body = request.body()
+    console.log(body.playerId);
+
 
     const gameRef = firebaseService.db().collection("games").doc(body.gameCode)
 
@@ -31,7 +33,7 @@ export default class GamesController {
           // Create game with gameCode generated
           return gameRef.set({
             timestamp: Timestamp.fromMillis(Date.now())
-          }).then(() => gameRef.collection('players').add({
+          }).then(() => gameRef.collection('players').doc(body.playerId).set({
             pseudo: body.pseudo,
             screen: 'waiting'
           }).then(() => response.status(200).json({ status: 200, message: 'Partie créée !' }))
@@ -51,7 +53,6 @@ export default class GamesController {
    */
   async join({ request, response }: HttpContext) {
     const body = request.body()
-    console.log(body);
 
     if (body.gameCode === undefined || body.gameCode === '' || body.pseudo === undefined || body.pseudo === '') {
       return response.status(500).json({ status: 500, message: 'Veuillez renseigner un code de partie et un pseudo' })
@@ -68,7 +69,11 @@ export default class GamesController {
         return gameRef.collection('players').add({
           pseudo: body.pseudo,
           screen: 'waiting'
-        }).then(() => response.status(200).json({ status: 200, message: 'Joueur ajouté à la partie !' }))
+        }).then((player) => {
+          console.log(player.id);
+          
+          response.status(200).json({ status: 200, message: 'Joueur ajouté à la partie !', playerId: player.id })
+        })
       })
   }
 }

@@ -1,5 +1,6 @@
 import { applicationDefault, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
 
 // class ServiceAccount {
 //   type: string = '';
@@ -27,5 +28,9 @@ export default class FirebaseService {
 
   db() {
     return getFirestore()
+  }
+
+  storage() {
+    return getStorage().bucket()
   }
 }
