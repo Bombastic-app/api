@@ -7,14 +7,6 @@ import { Timestamp } from "firebase-admin/firestore";
 
 export default class GamesController {
   /**
-   * @index
-   * @method GET
-   */
-  async index() {
-    return gameService.getPlayers()
-  }
-
-  /**
    * @create
    * @description Create a new game in database
    * @method POST
@@ -35,7 +27,9 @@ export default class GamesController {
             timestamp: Timestamp.fromMillis(Date.now())
           }).then(() => gameRef.collection('players').doc(body.playerId).set({
             pseudo: body.pseudo,
-            screen: 'waiting'
+            uid: body.playerId,
+            current: false,
+            main: false
           }).then(() => response.status(200).json({ status: 200, message: 'Partie créée !' }))
           )
         } else {
@@ -68,10 +62,10 @@ export default class GamesController {
 
         return gameRef.collection('players').add({
           pseudo: body.pseudo,
-          screen: 'waiting'
+          current: false,
+          main: false
         }).then((player) => {
-          console.log(player.id);
-          
+          player.update({ uid: player.id })
           response.status(200).json({ status: 200, message: 'Joueur ajouté à la partie !', playerId: player.id })
         })
       })

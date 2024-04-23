@@ -1,6 +1,8 @@
 import Game from "#models/game"
 import { firebaseService } from "#start/kernel";
+import { HttpContext } from "@adonisjs/core/http";
 import Player from "../models/player.js";
+import { ServerResponse } from "http";
 
 export default class GameService {
   game?: Game;
@@ -53,7 +55,7 @@ export default class GameService {
     }
   }
 
-  async nextPlayer() {
+  async nextPlayer({ response }: HttpContext) {
     if (this.game) {
       firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.game.currentPlayer.uid).update({
         current: false
@@ -65,6 +67,11 @@ export default class GameService {
   
       this.game.currentPlayerIndex += 1;
       this.game.currentPlayer = this.players[this.game.currentPlayerIndex];
+
+      console.log('GAME-SERVICE: Next player is ', this.game.currentPlayer.pseudo);
+      
+
+      return response.status(200).json({ status: 200, message: "Joueur suivant !" })
     }
   }
 }

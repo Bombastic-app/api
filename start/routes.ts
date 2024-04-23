@@ -38,11 +38,9 @@ router.get('cards', [CardsController, 'index'])
 router.get('card/:id', [CardsController, 'get'])
 
 /** Players */
-router.post('players/add', [PlayersController, 'add'])
 router.post('player/generateId', [PlayersController, 'generateId'])
 
 /** Games */
-router.get('games', [GamesController, 'index'])
 router.post('game/create', [GamesController, 'create'])
 router.post('game/join', [GamesController, 'join'])
 router.post('game/start', [GamesController, 'start'])
