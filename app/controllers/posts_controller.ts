@@ -7,10 +7,11 @@ export default class PostsController {
   async add(context: HttpContext) {
     const body = context.request.body()
 
-    firebaseService.db().collection(`games/${body.gameId}/turns/${gameService.game?.currentTurn}/posts`).doc(body.playerId).set({
+    firebaseService.db().collection(`games/${body.gameCode}/turns/${gameService.game?.currentTurn}/posts`).doc(body.playerId).set({
       type: body.type,
       content: body.content,
       playerId: body.playerId,
+      pseudo: body.pseudo,
       timestamp: Timestamp.fromMillis(Date.now())
     }).then(() => {
       gameService.nextPlayer(context)
