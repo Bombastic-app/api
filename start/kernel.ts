@@ -42,4 +42,4 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  */
 export const middleware = router.named({})
 export const firebaseService = new FirebaseService();
-export const gameService = new GameService('XOnB0bKnYoL8bAoyzG8C');
+export const gameService = new GameService('123456');

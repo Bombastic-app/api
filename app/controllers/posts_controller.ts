@@ -10,6 +10,9 @@ export default class PostsController {
       content: body.content,
       playerId: body.playerId
     }).then(() => {
+      gameService.nextPlayer()
+      console.log(`POSTS-CONTROLLER: Turn of ${gameService.game?.currentPlayer?.pseudo}`);
+      
       return response.status(200).json({ status: 200, message: 'Post ajouté !' })
     })
   }

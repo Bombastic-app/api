@@ -76,4 +76,20 @@ export default class GamesController {
         })
       })
   }
+
+  /**
+   * @start
+   * @description Start a game
+   * @method POST
+   * @responseHeader 200 {string} content-type application/json 
+   */
+  async start({ request, response }: HttpContext) {
+    const body = request.body()
+
+    return firebaseService.db().collection('games').doc(body.gameCode).update({
+      ready: true
+    }).then(() => {
+      return response.status(200).json({ status: 200, message: 'Partie démarrée !' })
+    })
+  }
 }

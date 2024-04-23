@@ -4,13 +4,14 @@ import Post from "./post.js";
 export default class Game {
   currentTurn: number;
   currentPlayer: Player;
+  currentPlayerIndex: number = 0;
   currentTurnPosts: Array<Post>;
   reputationTitle?: Player;
   moneyTitle?: Player;
   followersTitle?: Player;
 
   constructor(currentPlayer: Player) {
-    this.currentTurn = 1;
+    this.currentTurn = 0;
     this.currentPlayer = currentPlayer;
     this.currentTurnPosts = [];
   }

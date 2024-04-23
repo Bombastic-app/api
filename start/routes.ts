@@ -45,6 +45,7 @@ router.post('player/generateId', [PlayersController, 'generateId'])
 router.get('games', [GamesController, 'index'])
 router.post('game/create', [GamesController, 'create'])
 router.post('game/join', [GamesController, 'join'])
+router.post('game/start', [GamesController, 'start'])
 
 /** Posts */
 router.post('post/add', [PostsController, 'add'])
