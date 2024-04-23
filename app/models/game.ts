@@ -2,12 +2,12 @@ import Player from "./player.js";
 import Post from "./post.js";
 
 export default class Game {
-  private currentTurn: number; 
-  private currentPlayer: Player;
-  private currentTurnPosts: Array<Post>;
-  private reputationTitle?: Player;
-  private moneyTitle?: Player;
-  private followersTitle?: Player;
+  currentTurn: number;
+  currentPlayer: Player;
+  currentTurnPosts: Array<Post>;
+  reputationTitle?: Player;
+  moneyTitle?: Player;
+  followersTitle?: Player;
 
   constructor(currentPlayer: Player) {
     this.currentTurn = 1;
@@ -15,55 +15,55 @@ export default class Game {
     this.currentTurnPosts = [];
   }
 
-  public getCurrentTurn(): number {
-    return this.currentTurn;
-  }
+  // public getCurrentTurn(): number {
+  //   return this.currentTurn;
+  // }
 
-  public getCurrentPlayer(): Player {
-    return this.currentPlayer;
-  }
+  // public getCurrentPlayer(): Player {
+  //   return this.currentPlayer;
+  // }
 
-  public getCurrentTurnPosts(): Array<Post> {
-    return this.currentTurnPosts;
-  }
+  // public getCurrentTurnPosts(): Array<Post> {
+  //   return this.currentTurnPosts;
+  // }
 
-  public getReputationTitle(): Player | undefined {
-    return this.reputationTitle;
-  }
+  // public getReputationTitle(): Player | undefined {
+  //   return this.reputationTitle;
+  // }
 
-  public getMoneyTitle(): Player | undefined {
-    return this.moneyTitle;
-  }
+  // public getMoneyTitle(): Player | undefined {
+  //   return this.moneyTitle;
+  // }
 
-  public getFollowersTitle(): Player | undefined {
-    return this.followersTitle;
-  }
+  // public getFollowersTitle(): Player | undefined {
+  //   return this.followersTitle;
+  // }
 
-  public setCurrentTurn(currentTurn: number): void {
-    this.currentTurn = currentTurn;
-  }
+  // public setCurrentTurn(currentTurn: number): void {
+  //   this.currentTurn = currentTurn;
+  // }
 
-  public setCurrentPlayer(currentPlayer: Player): void {
-    this.currentPlayer = currentPlayer;
-  }
+  // public setCurrentPlayer(currentPlayer: Player): void {
+  //   this.currentPlayer = currentPlayer;
+  // }
 
-  public setCurrentTurnPosts(currentTurnPosts: Array<Post>): void {
-    this.currentTurnPosts = currentTurnPosts;
-  }
+  // public setCurrentTurnPosts(currentTurnPosts: Array<Post>): void {
+  //   this.currentTurnPosts = currentTurnPosts;
+  // }
 
-  public setReputationTitle(reputationTitle: Player): void {
-    this.reputationTitle = reputationTitle;
-  }
+  // public setReputationTitle(reputationTitle: Player): void {
+  //   this.reputationTitle = reputationTitle;
+  // }
 
-  public setMoneyTitle(moneyTitle: Player): void {
-    this.moneyTitle = moneyTitle;
-  }
+  // public setMoneyTitle(moneyTitle: Player): void {
+  //   this.moneyTitle = moneyTitle;
+  // }
 
-  public setFollowersTitle(followersTitle: Player): void {
-    this.followersTitle = followersTitle;
-  }
+  // public setFollowersTitle(followersTitle: Player): void {
+  //   this.followersTitle = followersTitle;
+  // }
 
-  public addPost(post: Post): void {
-    this.currentTurnPosts.push(post);
-  }
+  // public addPost(post: Post): void {
+  //   this.currentTurnPosts.push(post);
+  // }
 }

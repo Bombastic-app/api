@@ -1,8 +1,9 @@
 import Game from "#models/game"
 import { firebaseService } from "#start/kernel";
+import Player from "../models/player.js";
 
 export default class GameService {
-  private game?: Game;
+  public game?: Game;
   private gameCode: string;
   private players: any[] = [];
 
@@ -20,8 +21,20 @@ export default class GameService {
   }
 
   private init() {
-    this.game = new Game(this.players[0]);
-    return 'sucess'
+    const player = new Player(this.players[0].uid, this.players[0].pseudo, null, '', [])
+    this.game = new Game(player);
+    // this.newTurn()
+  }
+
+  async newTurn() {
+    if (this.game) {
+      this.game.currentTurn += 1;
+      
+      firebaseService.db().collection(`games/${this.gameCode}/turns/${this.game.currentTurn}/posts`).doc(this.game.currentPlayer.uid).onSnapshot((post) => {
+        // Card was scanned by the player
+        // this.game?.currentTurnPosts.push()
+      })
+    }
   }
 
   async getPlayers() {
