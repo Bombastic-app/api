@@ -42,4 +42,10 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  */
 export const middleware = router.named({})
 export const firebaseService = new FirebaseService();
-export const gameService = new GameService('123456');
+export const gameServices: Map<string, GameService> = new Map<string, GameService>();
+
+firebaseService.db().collection('currentGames').get().then((currentGames) => {
+  currentGames.forEach((currentGame) => {
+    gameServices.set(currentGame.id, new GameService(currentGame.id))
+  })
+})

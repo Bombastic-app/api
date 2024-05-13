@@ -29,7 +29,6 @@ export default class CardsController {
    * @description Get a card by id
    */
   async get({ params }: HttpContext) {
-    console.log(params.id);
     return this.collection.doc(params.id).get().then((card) => {
       return card.data();
     })

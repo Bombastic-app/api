@@ -2,7 +2,6 @@ import Game from "#models/game"
 import { firebaseService } from "#start/kernel";
 import { HttpContext } from "@adonisjs/core/http";
 import Player from "../models/player.js";
-import { ServerResponse } from "http";
 
 export default class GameService {
   game?: Game;
@@ -11,14 +10,19 @@ export default class GameService {
 
   constructor(gameCode: string) {
     this.gameCode = gameCode;
+
     firebaseService.db().collection(`games/${this.gameCode}/players`).get()
       .then((players) => {
-        this.players = players.docs.map((player) => {
+        players.docs.map((player) => {
           const data = player.data()
-          return new Player(player.id, data.pseudo, data.main)
+          this.players.push(new Player(player.id, data.pseudo, data.main, data.index))
         })
-        this.init()
 
+        // this.players = players.docs.map((player) => {
+        //   const data = player.data()
+        //   return new Player(player.id, data.pseudo, data.main)
+        // })
+        this.init()
       })
       .catch((error) => {
         return error
@@ -26,12 +30,12 @@ export default class GameService {
 
   }
 
-  private init() {
+  public init() {
     const currentPlayer = this.players.find((player) => player.main)
     this.game = new Game(currentPlayer);
     firebaseService.db().collection('games').doc(`${this.gameCode}`).onSnapshot((game) => {
       if (game.data()?.ready) {
-        console.log('GAME-SERVICE: Game is ready');
+        console.log(`GAME-SERVICE ${this.gameCode}: Game is ready`);
 
         this.newTurn()
       }
@@ -45,7 +49,7 @@ export default class GameService {
       firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.game.currentPlayer.uid).update({
         current: true
       }).then(() => {
-        console.log(`GAME-SERVICE: New turn ${this.game?.currentTurn} started by ${this.game?.currentPlayer.pseudo}`)
+        console.log(`GAME-SERVICE ${this.gameCode} : New turn ${this.game?.currentTurn} started by ${this.game?.currentPlayer.pseudo}`)
 
       })
       // firebaseService.db().collection(`games/${this.gameCode}/turns/${this.game.currentTurn}/posts`).doc(this.game.currentPlayer.uid).onSnapshot((post) => {
@@ -57,24 +61,38 @@ export default class GameService {
 
   async nextPlayer({ response }: HttpContext) {
     if (this.game) {
-      return firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.game.currentPlayer.uid).update({
-        current: false
-      }).then(() => {
-        return firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.players[this.game!.currentPlayerIndex + 1].uid).update({
-          current: true
+      console.log(this.game.currentPlayerIndex, this.players.length);
+      
+      if (this.game.currentPlayerIndex === this.players.length - 1) {
+        return firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.players[this.game.currentPlayerIndex].uid).update({
+          current: false
         }).then(() => {
+          return firebaseService.db().collection(`games/${this.gameCode}/turns`).doc(this.game!.currentTurn.toString()).update({
+            miniGameReady: true
+          })
+        })
+
+      } else {
+        return firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.game.currentPlayer.uid).update({
+          current: false
+        }).then(async () => {
           this.game!.currentPlayerIndex += 1;
-          this.game!.currentPlayer = this.players[this.game!.currentPlayerIndex];
-
-          console.log('GAME-SERVICE: Next player is ', this.game!.currentPlayer.pseudo);
-
-          return response.status(200).json({ status: 200, message: "Joueur suivant !" })
-        })
-        .catch((error) => {
-          console.log(error);
           
+          return firebaseService.db().collection(`games/${this.gameCode}/players`).doc(this.players.find((player) => player.index === this.game?.currentPlayerIndex).uid).update({
+            current: true
+          }).then(() => {
+            this.game!.currentPlayer = this.players[this.game!.currentPlayerIndex];
+
+            console.log('GAME-SERVICE: Next player is ', this.game!.currentPlayer.pseudo);
+
+            return response.status(200).json({ status: 200, message: "Joueur suivant !" })
+          })
+            .catch((error) => {
+              console.log(error);
+
+            })
         })
-      })
+      }
     }
   }
 }

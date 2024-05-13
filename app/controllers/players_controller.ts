@@ -1,6 +1,6 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
-import { firebaseService } from "#start/kernel";
+import { firebaseService, gameServices } from "#start/kernel";
 import { HttpContext } from "@adonisjs/core/http";
 
 export default class PlayersController {
@@ -35,4 +35,9 @@ export default class PlayersController {
     
     return response.json({ playerId: firebaseService.db().collection(`games/${body.gameCode}/players`).doc().id})
   }
+
+  getPlayers({ params }: HttpContext) {
+    const gameCode = params.gameCode
+    return gameServices.get(gameCode)?.players
+  } 
 }

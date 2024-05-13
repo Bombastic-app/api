@@ -1,8 +1,9 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
-import { firebaseService, gameService } from "#start/kernel";
+import Player from "#models/player";
+import GameService from "#services/game_service";
+import { firebaseService, gameServices } from "#start/kernel";
 import { HttpContext } from "@adonisjs/core/http";
-import { log } from "console";
 import { Timestamp } from "firebase-admin/firestore";
 
 export default class GamesController {
@@ -14,23 +15,31 @@ export default class GamesController {
    */
   async create({ request, response }: HttpContext) {
     const body = request.body()
-    console.log(body.playerId);
-
-
     const gameRef = firebaseService.db().collection("games").doc(body.gameCode)
+    const currentGameRef = firebaseService.db().collection('currentGames')
 
     return gameRef.get()
       .then((game) => {
         if (!game.exists) {
           // Create game with gameCode generated
           return gameRef.set({
-            timestamp: Timestamp.fromMillis(Date.now())
+            timestamp: Timestamp.fromMillis(Date.now()),
+            ready: false
           }).then(() => gameRef.collection('players').doc(body.playerId).set({
             pseudo: body.pseudo,
             uid: body.playerId,
-            current: false,
-            main: false
-          }).then(() => response.status(200).json({ status: 200, message: 'Partie créée !' }))
+            current: true,
+            main: true,
+            index: 0
+          }).then(() => {
+            currentGameRef.doc(body.gameCode).set({})
+            gameServices.set(body.gameCode, new GameService(body.gameCode))
+            response.status(200).json({ status: 200, message: 'Partie créée !' })
+          }).then(() => {
+            gameRef.collection('turns').doc('1').set({
+              miniGameReady: false
+            })
+          })
           )
         } else {
           // Regenerate a new gameCode since the first one already exists
@@ -63,9 +72,11 @@ export default class GamesController {
         return gameRef.collection('players').add({
           pseudo: body.pseudo,
           current: false,
-          main: false
+          main: false,
+          index: gameServices.get(body.gameCode)?.players.length
         }).then((player) => {
           player.update({ uid: player.id })
+          gameServices.get(body.gameCode)?.players.push(new Player(player.id, body.pseudo, false, gameServices.get(body.gameCode)!.players.length))
           response.status(200).json({ status: 200, message: 'Joueur ajouté à la partie !', playerId: player.id })
         })
       })
@@ -79,11 +90,20 @@ export default class GamesController {
    */
   async start({ request, response }: HttpContext) {
     const body = request.body()
-
+    
     return firebaseService.db().collection('games').doc(body.gameCode).update({
       ready: true
     }).then(() => {
       return response.status(200).json({ status: 200, message: 'Partie démarrée !' })
     })
+  }
+
+  async reset({ params }: HttpContext) {
+    gameServices.set(params.gameCode, new GameService(params.gameCode))
+    setTimeout(() => {
+      gameServices.get(params.gameCode)!.game!.currentPlayer = gameServices.get(params.gameCode)!.players[3]
+      gameServices.get(params.gameCode)!.game!.currentPlayerIndex = 3
+    }, 4000)
+    // gameServices[0].init()
   }
 }
