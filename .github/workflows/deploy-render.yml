@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       deployments: write
+      actions: read
+      checks: write
+      contents: read
+      pull-requests: write
+      packages: write
     steps:
         - uses: actions/checkout@v3
         - uses: JorgeLNJunior/render-deploy@v1.4.4
