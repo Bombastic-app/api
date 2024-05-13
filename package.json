@@ -58,7 +58,8 @@
     "@vinejs/vine": "^1.7.1",
     "adonis-autoswagger": "^3.9.0",
     "firebase-admin": "^12.0.0",
-    "reflect-metadata": "^0.2.1"
+    "reflect-metadata": "^0.2.1",
+    "ts-node": "^10.9.2"
   },
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/app"
