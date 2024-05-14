@@ -15,8 +15,7 @@ export default class CardsController {
   /**
    * @index
    * @method GET
-   * @description Get all cards
-   * @responseHeader 200 {string} content-type application/json
+   * @summary Get all cards
    */
   async index() {
     return this.collection?.get().then((cards) => {
@@ -27,7 +26,7 @@ export default class CardsController {
   /**
    * @show
    * @method GET
-   * @description Get a card by id
+   * @summary Get a card by id
    */
   async get({ params }: HttpContext) {
     return this.collection?.doc(params.id).get().then((card) => {

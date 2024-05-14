@@ -6,7 +6,7 @@ export default class MiniGamesController {
 
   /**
    * @start
-   * @description Start the mini game
+   * @summary Start the mini game
    * @method POST
    * @responseBody 200 - { "status": 200, "message": "réponse validée pour 2pUYxkCWhjXuygSnq7wD !"" }
    */

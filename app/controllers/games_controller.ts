@@ -7,7 +7,7 @@ import app from '@adonisjs/core/services/app';
 export default class GamesController {
   /**
    * @create
-   * @description Create a new game in database
+   * @summary Create a new game in database
    * @method Post
    * @requestBody {"gameCode": "123456", "playerId": "2pUYxkCWhjXuygSnq7wD", "pseudo": "Bombastic"}
    * @responseBody 200 - {"status": 200, "message": "Partie créée !"}
@@ -53,7 +53,7 @@ export default class GamesController {
 
   /**
    * @join
-   * @description Join a game
+   * @summary Join a game
    * @method POST
    * @requestBody {"gameCode": "123456", "pseudo": "Bombastic"}
    * @responseBody 200 - { "status": 200, "message": "Joueur ajouté à la partie !", "playerId": "2pUYxkCWhjXuygSnq7wD" } 
@@ -92,7 +92,7 @@ export default class GamesController {
 
   /**
    * @start
-   * @description Start a game
+   * @summary Start a game
    * @method POST
    * @responseBody 200 - { "status": 200, "message": "Partie démarrée !" } 
    */
@@ -109,7 +109,7 @@ export default class GamesController {
 
   /**
    * @reset
-   * @description Reset a game
+   * @summary Reset a game
    * @method GET
    * @paramPath gameCode - Game code to reset
    */
