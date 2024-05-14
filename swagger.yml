@@ -38,23 +38,10 @@ components:
       properties: {}
       description: "Model"
 paths:
-  /:
-    get:
-      summary: " (route.ts)"
-      description: ""
-      parameters: []
-      tags:
-        - ""
-      responses:
-        200:
-          description: "OK"
-          content:
-            application/json: {}
-      security: []
   /cards:
     get:
-      summary: "Get a list of cards (app/controllers/cards_controller.ts::index)"
-      description: "Get all cards"
+      summary: "Get all cards (app/controllers/cards_controller.ts::index)"
+      description: ""
       parameters: []
       tags:
         - "CARDS"
@@ -84,8 +71,8 @@ paths:
       security: []
   /player/generateId:
     post:
-      summary: " (app/controllers/players_controller.ts::generateId)"
-      description: "Generate a new player id"
+      summary: "Generate a new player id (app/controllers/players_controller.ts::generateId)"
+      description: ""
       parameters: []
       tags:
         - "PLAYER"
@@ -115,8 +102,8 @@ paths:
       security: []
   /game/create:
     post:
-      summary: " (app/controllers/games_controller.ts::create)"
-      description: "Create a new game in database"
+      summary: "Create a new game in database (app/controllers/games_controller.ts::create)"
+      description: ""
       parameters: []
       tags:
         - "GAME"
@@ -150,8 +137,8 @@ paths:
               pseudo: "Bombastic"
   /game/join:
     post:
-      summary: " (app/controllers/games_controller.ts::join)"
-      description: "Join a game"
+      summary: "Join a game (app/controllers/games_controller.ts::join)"
+      description: ""
       parameters: []
       tags:
         - "GAME"
@@ -192,8 +179,8 @@ paths:
               pseudo: "Bombastic"
   /game/start:
     post:
-      summary: " (app/controllers/games_controller.ts::start)"
-      description: "Start a game"
+      summary: "Start a game (app/controllers/games_controller.ts::start)"
+      description: ""
       parameters: []
       tags:
         - "GAME"
@@ -209,8 +196,8 @@ paths:
       security: []
   /game/reset/{gameCode}:
     get:
-      summary: " (app/controllers/games_controller.ts::reset)"
-      description: "Reset a game"
+      summary: "Reset a game (app/controllers/games_controller.ts::reset)"
+      description: ""
       parameters:
         - in: "path"
           name: "gameCode"
@@ -245,8 +232,8 @@ paths:
           application/json: {}
   /mini-game/start:
     post:
-      summary: " (app/controllers/mini_games_controller.ts::start)"
-      description: "Start the mini game"
+      summary: "Start the mini game (app/controllers/mini_games_controller.ts::start)"
+      description: ""
       parameters: []
       tags:
         - "MINI-GAME"
