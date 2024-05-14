@@ -1,0 +1,217 @@
+openapi: "3.0.0"
+info:
+  title: "Foo"
+  version: "1.0.0"
+components:
+  responses:
+    Forbidden:
+      description: "Access token is missing or invalid"
+    Accepted:
+      description: "The request was accepted"
+    Created:
+      description: "The resource has been created"
+    NotFound:
+      description: "The resource has been created"
+    NotAcceptable:
+      description: "The resource has been created"
+  securitySchemes:
+    BearerAuth:
+      type: "http"
+      scheme: "bearer"
+  schemas:
+    Any:
+      description: "Any JSON object not defined as schema"
+    Card:
+      type: "object"
+      properties: {}
+      description: "Model"
+    Game:
+      type: "object"
+      properties: {}
+      description: "Model"
+    Player:
+      type: "object"
+      properties: {}
+      description: "Model"
+    Post:
+      type: "object"
+      properties: {}
+      description: "Model"
+paths:
+  /:
+    get:
+      summary: " (route.ts)"
+      description: ""
+      parameters: []
+      tags: []
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json: {}
+      security: []
+  /cards:
+    get:
+      summary: "Get a list of  (app/controllers/cards_controller.ts::index)"
+      description: "Get all cards"
+      parameters: []
+      tags:
+        - ""
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json: {}
+      security: []
+  /card/{id}:
+    get:
+      summary: " (app/controllers/cards_controller.ts::get)"
+      description: ""
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+      tags:
+        - ":ID"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json: {}
+      security: []
+  /player/generateId:
+    post:
+      summary: " (app/controllers/players_controller.ts::generateId)"
+      description: "Generate a new player id"
+      parameters: []
+      tags:
+        - "GENERATEID"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json: {}
+      security: []
+  /players/get/{gameCode}:
+    get:
+      summary: " (app/controllers/players_controller.ts::getPlayers)"
+      description: ""
+      parameters:
+        - in: "path"
+          name: "gameCode"
+          schema:
+            type: "string"
+          required: true
+      tags:
+        - "GET"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json: {}
+      security: []
+  /game/create:
+    post:
+      summary: " (app/controllers/games_controller.ts::create)"
+      description: "Create a new game in database"
+      parameters: []
+      tags:
+        - "CREATE"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json: {}
+      security: []
+  /game/join:
+    post:
+      summary: " (app/controllers/games_controller.ts::join)"
+      description: "Join a game"
+      parameters: []
+      tags:
+        - "JOIN"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json: {}
+      security: []
+  /game/start:
+    post:
+      summary: " (app/controllers/games_controller.ts::start)"
+      description: "Start a game"
+      parameters: []
+      tags:
+        - "START"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json: {}
+      security: []
+  /game/reset/{gameCode}:
+    get:
+      summary: " (app/controllers/games_controller.ts::reset)"
+      description: ""
+      parameters:
+        - in: "path"
+          name: "gameCode"
+          schema:
+            type: "string"
+          required: true
+      tags:
+        - "RESET"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json: {}
+      security: []
+  /post/add:
+    post:
+      summary: " (app/controllers/posts_controller.ts::add)"
+      description: ""
+      parameters: []
+      tags:
+        - "ADD"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json: {}
+      security: []
+      requestBody:
+        content:
+          application/json: {}
+  /mini-game/start:
+    post:
+      summary: " (app/controllers/mini_games_controller.ts::start)"
+      description: "Start the mini game"
+      parameters: []
+      tags:
+        - "START"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json: {}
+      security: []
+tags:
+  - name: ":ID"
+    description: "Everything related to :ID"
+  - name: "GENERATEID"
+    description: "Everything related to GENERATEID"
+  - name: "GET"
+    description: "Everything related to GET"
+  - name: "CREATE"
+    description: "Everything related to CREATE"
+  - name: "JOIN"
+    description: "Everything related to JOIN"
+  - name: "START"
+    description: "Everything related to START"
+  - name: "RESET"
+    description: "Everything related to RESET"
+  - name: "ADD"
+    description: "Everything related to ADD"
