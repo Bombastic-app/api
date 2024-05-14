@@ -1,7 +1,3 @@
-import { firebaseService } from '#start/kernel';
-import FirebaseService from '#services/firebase_service';
-import GamesService from '#services/games_service';
-import { inject } from '@adonisjs/core';
 import type { HttpContext } from '@adonisjs/core/http'
 import app from '@adonisjs/core/services/app';
 import { Timestamp } from 'firebase-admin/firestore'
