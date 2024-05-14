@@ -5,9 +5,9 @@ import url from "node:url";
 
 export default {
   path: path.dirname(url.fileURLToPath(import.meta.url)) + "/../", // for AdonisJS v6
-  title: "Foo",
-  version: "1.0.0",
-  tagIndex: 2,
+  title: "Bombastic",
+  version: "0.0.1",
+  tagIndex: 1,
   snakeCase: true,
   debug: true, // set to true, to get some useful debug output
   ignore: ["/swagger", "/docs"],

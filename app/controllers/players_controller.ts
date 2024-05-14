@@ -1,10 +1,7 @@
-// import type { HttpContext } from '@adonisjs/core/http'
-
-import { firebaseService, gameServices } from "#start/kernel";
 import { HttpContext } from "@adonisjs/core/http";
+import app from '@adonisjs/core/services/app';
 
 export default class PlayersController {
-  
   // /**
   //  * @add
   //  * @description Add a player to a game
@@ -30,14 +27,17 @@ export default class PlayersController {
    * @method POST
    * @description Generate a new player id
    */
-  generateId({ request, response }: HttpContext) {
+  async generateId({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
     const body = request.body()
     
     return response.json({ playerId: firebaseService.db().collection(`games/${body.gameCode}/players`).doc().id})
   }
 
-  getPlayers({ params }: HttpContext) {
+  async getPlayers({ params }: HttpContext) {
+    const gamesService = await app.container.make('gamesService')
     const gameCode = params.gameCode
-    return gameServices.get(gameCode)?.players
+
+    return gamesService.games.get(gameCode)?.players
   } 
 }

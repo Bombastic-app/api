@@ -1,21 +1,24 @@
-// import type { HttpContext } from '@adonisjs/core/http'
-
-import { firebaseService, gameServices } from "#start/kernel";
 import { HttpContext } from "@adonisjs/core/http";
+import app from '@adonisjs/core/services/app';
 
 export default class MiniGamesController {
+  constructor() {}
+
   /**
    * @start
    * @description Start the mini game
    * @method POST
-   * @responseHeader 200 {string} content-type application/json
+   * @responseBody 200 - { "status": 200, "message": "réponse validée pour 2pUYxkCWhjXuygSnq7wD !"" }
    */
-  start({ request, response }: HttpContext) {
+  async start({ request, response }: HttpContext) {
     // Start the mini game
     const body = request.body()
-    const gameService = gameServices.get(body.gameCode)
+    const gamesServices = await app.container.make('gamesService')
+    const firebaseService = await app.container.make('firebaseService')
 
-    firebaseService.db().collection(`games/${body.gameCode}/turns/${gameService?.game?.currentTurn}/miniGame`).doc(body.playerId).set({
+    const gameService = gamesServices.games.get(body.gameCode)
+
+    firebaseService.db().collection(`games/${body.gameCode}/turns/${gameService?.currentTurn}/miniGame`).doc(body.playerId).set({
       ready: true
     }).then(() => {
       return response.status(200).json({ status: 200, message: `réponse validée pour ${body.playerId} !` })

@@ -1,35 +1,36 @@
-// import type { HttpContext } from '@adonisjs/core/http'
-
-import { firebaseService } from "#start/kernel";
 import { HttpContext } from "@adonisjs/core/http";
 import { CollectionReference } from "firebase-admin/firestore";
-
+import app from '@adonisjs/core/services/app'
 
 export default class CardsController {
   private ref: string = 'cards';
-  private collection: CollectionReference;
+  private collection?: CollectionReference;
 
   constructor() {
-    this.collection = firebaseService.db().collection(this.ref);
+    app.container.make('firebaseService').then((firebaseService) => {
+      this.collection = firebaseService.db().collection(this.ref)
+    })
   }
 
   /**
    * @index
+   * @method GET
    * @description Get all cards
-   * @responseHeader 200 {string} content-type application/json 
+   * @responseHeader 200 {string} content-type application/json
    */
   async index() {
-    return this.collection.get().then((cards) => {
+    return this.collection?.get().then((cards) => {
       return cards.docs.map((card) => card.data())
     })
   }
 
   /**
    * @show
+   * @method GET
    * @description Get a card by id
    */
   async get({ params }: HttpContext) {
-    return this.collection.doc(params.id).get().then((card) => {
+    return this.collection?.doc(params.id).get().then((card) => {
       return card.data();
     })
   }

@@ -14,6 +14,8 @@ export default class DocsGenerate extends BaseCommand {
   async run() {
     const Router = await this.app.container.make('router')
     Router.commit()
-    await AutoSwagger.default.writeFile(Router.toJSON(), swagger)
+    await AutoSwagger.default.writeFile(Router.toJSON(), swagger).then(() => {
+      this.logger.success('Swagger file generated')
+    })
   }
 }

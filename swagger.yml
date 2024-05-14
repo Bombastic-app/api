@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
-  title: "Foo"
-  version: "1.0.0"
+  title: "Bombastic"
+  version: "0.0.1"
 components:
   responses:
     Forbidden:
@@ -43,7 +43,8 @@ paths:
       summary: " (route.ts)"
       description: ""
       parameters: []
-      tags: []
+      tags:
+        - ""
       responses:
         200:
           description: "OK"
@@ -52,11 +53,11 @@ paths:
       security: []
   /cards:
     get:
-      summary: "Get a list of  (app/controllers/cards_controller.ts::index)"
+      summary: "Get a list of cards (app/controllers/cards_controller.ts::index)"
       description: "Get all cards"
       parameters: []
       tags:
-        - ""
+        - "CARDS"
       responses:
         200:
           description: "OK"
@@ -74,7 +75,7 @@ paths:
             type: "string"
           required: true
       tags:
-        - ":ID"
+        - "CARD"
       responses:
         200:
           description: "OK"
@@ -87,7 +88,7 @@ paths:
       description: "Generate a new player id"
       parameters: []
       tags:
-        - "GENERATEID"
+        - "PLAYER"
       responses:
         201:
           description: "Created"
@@ -105,7 +106,7 @@ paths:
             type: "string"
           required: true
       tags:
-        - "GET"
+        - "PLAYERS"
       responses:
         200:
           description: "OK"
@@ -118,51 +119,108 @@ paths:
       description: "Create a new game in database"
       parameters: []
       tags:
-        - "CREATE"
+        - "GAME"
       responses:
-        201:
-          description: "Created"
+        200:
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: "object"
+              example:
+                status: 200
+                message: "Partie créée !"
+        500:
+          content:
+            application/json:
+              schema:
+                type: "object"
+              example:
+                status: 500
+                message: "Ce code de partie est déjà utilisé..."
+                action: "regenerate"
       security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+            example:
+              gameCode: "123456"
+              playerId: "2pUYxkCWhjXuygSnq7wD"
+              pseudo: "Bombastic"
   /game/join:
     post:
       summary: " (app/controllers/games_controller.ts::join)"
       description: "Join a game"
       parameters: []
       tags:
-        - "JOIN"
+        - "GAME"
       responses:
-        201:
-          description: "Created"
+        200:
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: "object"
+              example:
+                status: 200
+                message: "Joueur ajouté à la partie !"
+                playerId: "2pUYxkCWhjXuygSnq7wD"
+        404:
+          content:
+            application/json:
+              schema:
+                type: "object"
+              example:
+                status: 404
+                message: "Cette partie n'existe pas..."
+        500:
+          content:
+            application/json:
+              schema:
+                type: "object"
+              example:
+                status: 500
+                message: "Veuillez renseigner un code de partie et un pseudo"
       security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+            example:
+              gameCode: "123456"
+              pseudo: "Bombastic"
   /game/start:
     post:
       summary: " (app/controllers/games_controller.ts::start)"
       description: "Start a game"
       parameters: []
       tags:
-        - "START"
+        - "GAME"
       responses:
-        201:
-          description: "Created"
+        200:
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: "object"
+              example:
+                status: 200
+                message: "Partie démarrée !"
       security: []
   /game/reset/{gameCode}:
     get:
       summary: " (app/controllers/games_controller.ts::reset)"
-      description: ""
+      description: "Reset a game"
       parameters:
         - in: "path"
           name: "gameCode"
+          description: "Game code to reset"
           schema:
+            example: "string"
             type: "string"
           required: true
       tags:
-        - "RESET"
+        - "GAME"
       responses:
         200:
           description: "OK"
@@ -175,7 +233,7 @@ paths:
       description: ""
       parameters: []
       tags:
-        - "ADD"
+        - "POST"
       responses:
         201:
           description: "Created"
@@ -191,27 +249,25 @@ paths:
       description: "Start the mini game"
       parameters: []
       tags:
-        - "START"
+        - "MINI-GAME"
       responses:
-        201:
-          description: "Created"
+        200:
           content:
-            application/json: {}
+            text/plain:
+              example: "{ \"status\": 200, \"message\": \"réponse validée pour 2pUYxkCWhjXuygSnq7wD !\"\" }"
       security: []
 tags:
-  - name: ":ID"
-    description: "Everything related to :ID"
-  - name: "GENERATEID"
-    description: "Everything related to GENERATEID"
-  - name: "GET"
-    description: "Everything related to GET"
-  - name: "CREATE"
-    description: "Everything related to CREATE"
-  - name: "JOIN"
-    description: "Everything related to JOIN"
-  - name: "START"
-    description: "Everything related to START"
-  - name: "RESET"
-    description: "Everything related to RESET"
-  - name: "ADD"
-    description: "Everything related to ADD"
+  - name: "CARDS"
+    description: "Everything related to CARDS"
+  - name: "CARD"
+    description: "Everything related to CARD"
+  - name: "PLAYER"
+    description: "Everything related to PLAYER"
+  - name: "PLAYERS"
+    description: "Everything related to PLAYERS"
+  - name: "GAME"
+    description: "Everything related to GAME"
+  - name: "POST"
+    description: "Everything related to POST"
+  - name: "MINI-GAME"
+    description: "Everything related to MINI-GAME"

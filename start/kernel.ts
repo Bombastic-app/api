@@ -8,8 +8,6 @@
 |
 */
 
-import FirebaseService from '#services/firebase_service'
-import GameService from '#services/game_service'
 import router from '@adonisjs/core/services/router'
 import server from '@adonisjs/core/services/server'
 
@@ -41,11 +39,3 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  * the routes or the routes group.
  */
 export const middleware = router.named({})
-export const firebaseService = new FirebaseService();
-export const gameServices: Map<string, GameService> = new Map<string, GameService>();
-
-firebaseService.db().collection('currentGames').get().then((currentGames) => {
-  currentGames.forEach((currentGame) => {
-    gameServices.set(currentGame.id, new GameService(currentGame.id))
-  })
-})
