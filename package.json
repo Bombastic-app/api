@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "node bin/server.js",
-    "build": "node ace build",
+    "build": "bash build.sh",
     "dev": "node ace serve --watch",
     "docs": "node ace docs:generate",
     "test": "node ace test",
