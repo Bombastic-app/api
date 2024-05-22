@@ -33,7 +33,10 @@ export default class GamesController {
             uid: body.playerId,
             current: true,
             main: true,
-            index: 0
+            index: 0,
+            reputation: 10,
+            followers: 10,
+            money: 10,
           }).then(() => {
             currentGameRef.doc(body.gameCode).set({})
             gamesService.games.set(body.gameCode, new Game(body.gameCode, firebaseService))
@@ -81,7 +84,10 @@ export default class GamesController {
           pseudo: body.pseudo,
           current: false,
           main: false,
-          index: gamesService.games.get(body.gameCode)?.players.length
+          index: gamesService.games.get(body.gameCode)?.players.length,
+          reputation: 10,
+          followers: 10,
+          money: 10,
         }).then((player) => {
           player.update({ uid: player.id })
           gamesService.games.get(body.gameCode)?.players.push(new Player(player.id, body.pseudo, false, gamesService.games.get(body.gameCode)!.players.length))
