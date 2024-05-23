@@ -34,6 +34,7 @@ router.get('card/:id', [CardsController, 'get'])
 
 /** Players */
 router.post('player/generateId', [PlayersController, 'generateId'])
+router.post('player/stats', [PlayersController, 'updateStatistics'])
 router.get('players/get/:gameCode', [PlayersController, 'getPlayers'])
 
 /** Games */

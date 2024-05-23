@@ -40,4 +40,27 @@ export default class PlayersController {
 
     return gamesService.games.get(gameCode)?.players
   } 
+
+  async updateStatistics({ request, response }: HttpContext) {
+    const body = request.body()
+    const firebaseService = await app.container.make('firebaseService')
+
+    const path = firebaseService.db().collection(`games/${body.gameCode}/players`).doc(body.playerId);
+    firebaseService.db()
+      .runTransaction((transaction) => {
+        return transaction.get(path).then((doc) => {
+          const newReputation = doc.data()?.reputation + body.reputation;
+          const newFollowers = doc.data()?.followers + body.followers;
+          const newMoney = doc.data()?.money + body.money;
+          transaction.update(path, { reputation: newReputation, followers: newFollowers, money: newMoney });
+        });
+      })
+      .then(() => {
+        console.log("Player statistics updated !");
+        return response.status(200).json({ status: 200, message: 'Player statistics updated !' })
+      })
+      .catch((error) => {
+        console.log("Transaction failed: ", error);
+      });
+  }
 }
