@@ -96,15 +96,12 @@ export default class PlayersController {
    */
   async getBio({ request, response }: HttpContext) {
     const firebaseService = await app.container.make('firebaseService')
-    console.log(request.param('gameCode'), request.param('playerId'));
 
     return firebaseService.db()
       .collection(`games/${request.param('gameCode')}/players`).doc(request.param('playerId'))
       .get()
       .then((doc) => {
-        console.log(doc.data()?.bio, typeof(doc.data()?.bio));
         return response.status(200).json({ status: 200, bio: doc.data()?.bio })
-        // return doc.data()?.bio
       })
   }
 }
