@@ -51,13 +51,13 @@ export default class PlayersController {
     const firebaseService = await app.container.make('firebaseService')
 
     const path = firebaseService.db().collection(`games/${body.gameCode}/players`).doc(body.playerId);
-    firebaseService.db()
+    return firebaseService.db()
       .runTransaction((transaction) => {
         return transaction.get(path).then((doc) => {
           const newReputation = doc.data()?.reputation + body.reputation;
           const newFollowers = doc.data()?.followers + body.followers;
           const newMoney = doc.data()?.money + body.money;
-          transaction.update(path, { reputation: newReputation, followers: newFollowers, money: newMoney });
+          return transaction.update(path, { reputation: newReputation, followers: newFollowers, money: newMoney });
         });
       })
       .then(() => {
