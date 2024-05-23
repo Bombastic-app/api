@@ -39,8 +39,13 @@ export default class PlayersController {
     const gameCode = params.gameCode
 
     return gamesService.games.get(gameCode)?.players
-  } 
+  }
 
+  /**
+   * @updateStatistics
+   * @method POST
+   * @summary Update the statistics of a player
+   */
   async updateStatistics({ request, response }: HttpContext) {
     const body = request.body()
     const firebaseService = await app.container.make('firebaseService')
@@ -62,5 +67,44 @@ export default class PlayersController {
       .catch((error) => {
         console.log("Transaction failed: ", error);
       });
+  }
+
+  /**
+   * @addBio
+   * @method POST
+   * @summary Add biography to a specific player
+   */
+  async addBio({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
+    const body = request.body()
+
+    return firebaseService.db()
+      .collection(`games/${body.gameCode}/players`).doc(body.playerId)
+      .update({ bio: body.bio })
+      .then(() => {
+        return response.status(200).json({ status: 200, message: 'Biographie ajoutée !' })
+      })
+      .catch((error) => {
+        console.log("Erreur lors de la modification de la biographie : ", error);
+      });
+  }
+
+  /**
+   * @getBio
+   * @method GET
+   * @summary Get biography of a specific player
+   */
+  async getBio({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
+    console.log(request.param('gameCode'), request.param('playerId'));
+
+    return firebaseService.db()
+      .collection(`games/${request.param('gameCode')}/players`).doc(request.param('playerId'))
+      .get()
+      .then((doc) => {
+        console.log(doc.data()?.bio, typeof(doc.data()?.bio));
+        return response.status(200).json({ status: 200, bio: doc.data()?.bio })
+        // return doc.data()?.bio
+      })
   }
 }
