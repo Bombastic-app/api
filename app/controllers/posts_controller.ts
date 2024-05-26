@@ -24,4 +24,50 @@ export default class PostsController {
       // return response.status(200).json({ status: 200, message: 'Post ajouté !' })
     })
   }
+
+  /**
+   * @addComment
+   * @method POST
+   * @summary Add comment to post
+   */
+  async addComment({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
+    const body = request.body()
+
+    return firebaseService.db()
+      .collection(`games/${body.gameCode}/turns/${body.currentTurn}/posts/${body.author}/comments`)
+      .add({
+        content: body.content,
+        playerId: body.playerId,
+        pseudo: body.pseudo,
+        timestamp: Timestamp.fromMillis(Date.now()),
+      })
+      .then(() => {
+        return response.status(200).json({ status: 200, message: 'Commentaire ajouté !' })
+      })
+      .catch((error) => {
+        console.log("Erreur lors de l'ajout du commentaire : ", error);
+      });
+  }
+
+  /**
+   * @addComment
+   * @method POST
+   * @summary Delete comment from post
+   */
+  async deleteComment({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
+    const body = request.body()
+
+    return firebaseService.db()
+      .collection(`games/${body.gameCode}/turns/${body.currentTurn}/posts/${body.author}/comments`)
+      .doc(body.id)
+      .delete()
+      .then(() => {
+        return response.status(200).json({ status: 200, message: 'Commentaire supprimé !' })
+      })
+      .catch((error) => {
+        console.log("Erreur lors de la suppression du commentaire : ", error);
+      });
+  }
 }
