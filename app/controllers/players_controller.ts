@@ -80,7 +80,7 @@ export default class PlayersController {
 
     return firebaseService.db()
       .collection(`games/${body.gameCode}/players`).doc(body.playerId)
-      .update({ bio: body.bio })
+      .update({ biography: body.biography })
       .then(() => {
         return response.status(200).json({ status: 200, message: 'Biographie ajoutée !' })
       })
@@ -101,7 +101,7 @@ export default class PlayersController {
       .collection(`games/${request.param('gameCode')}/players`).doc(request.param('playerId'))
       .get()
       .then((doc) => {
-        return response.status(200).json({ status: 200, bio: doc.data()?.bio })
+        return response.status(200).json({ status: 200, biography: doc.data()?.biography })
       })
   }
 }
