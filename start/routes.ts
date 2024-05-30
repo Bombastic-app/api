@@ -49,6 +49,8 @@ router.get('/game/reset/:gameCode', [GamesController, 'reset'])
 router.post('post/add', [PostsController, 'add'])
 router.post('post/comment/add', [PostsController, 'addComment'])
 router.post('post/comment/delete', [PostsController, 'deleteComment'])
+router.post('post/like', [PostsController, 'like'])
+router.post('post/dislike', [PostsController, 'dislike'])
 
 /** Mini-games */
 router.post('mini-game/start', [MiniGamesController, 'start'])
