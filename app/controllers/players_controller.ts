@@ -50,14 +50,24 @@ export default class PlayersController {
     const body = request.body()
     const firebaseService = await app.container.make('firebaseService')
 
+    const calculateValueWithLimits = (value: number) => {
+      return value > 0 ? (value > 100 ? 100 : value) : 1;
+    };
+
     const path = firebaseService.db().collection(`games/${body.gameCode}/players`).doc(body.playerId);
     return firebaseService.db()
       .runTransaction((transaction) => {
         return transaction.get(path).then((doc) => {
-          const newReputation = doc.data()?.reputation + body.reputation;
-          const newFollowers = doc.data()?.followers + body.followers;
-          const newMoney = doc.data()?.money + body.money;
-          return transaction.update(path, { reputation: newReputation, followers: newFollowers, money: newMoney });
+          const sumReputation = doc.data()?.reputation + body.reputation;
+          const reputation = calculateValueWithLimits(sumReputation);
+
+          const sumFollowers = doc.data()?.followers + body.followers;
+          const followers = calculateValueWithLimits(sumFollowers);
+
+          const sumMoney = doc.data()?.money + body.money;
+          const money = calculateValueWithLimits(sumMoney);
+
+          return transaction.update(path, { reputation, followers, money });
         });
       })
       .then(() => {
