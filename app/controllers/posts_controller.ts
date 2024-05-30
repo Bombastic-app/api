@@ -115,8 +115,6 @@ export default class PostsController {
     return firebaseService.db()
       .runTransaction((transaction) => {
         return transaction.get(path).then((doc) => {
-          console.log('dislike', doc.data()?.dislikes, typeof(doc.data()?.dislikes));
-          
           const newDislikes = body.value === false ? doc.data()?.dislikes + 1 : doc.data()?.dislikes - 1;
           return transaction.update(path, { dislikes: newDislikes });
         });
