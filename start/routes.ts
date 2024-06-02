@@ -37,6 +37,7 @@ router.post('player/generateId', [PlayersController, 'generateId'])
 router.post('player/stats', [PlayersController, 'updateStatistics'])
 router.post('player/bio', [PlayersController, 'addBio'])
 router.get('player/:gameCode/bio/:playerId', [PlayersController, 'getBio'])
+router.get('player/:gameCode/score/:playerId', [PlayersController, 'getScore'])
 router.get('players/get/:gameCode', [PlayersController, 'getPlayers'])
 
 /** Games */

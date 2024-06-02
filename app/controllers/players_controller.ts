@@ -114,4 +114,20 @@ export default class PlayersController {
         return response.status(200).json({ status: 200, biography: doc.data()?.biography })
       })
   }
+
+  /**
+   * @getScore
+   * @method GET
+   * @summary Get score of a specific player
+   */
+  async getScore({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
+
+    return firebaseService.db()
+      .collection(`games/${request.param('gameCode')}/players`).doc(request.param('playerId'))
+      .get()
+      .then((doc) => {
+        return response.status(200).json({ status: 200, score: doc.data()?.score })
+      })
+  }
 }
