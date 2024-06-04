@@ -48,10 +48,12 @@ router.get('/game/reset/:gameCode', [GamesController, 'reset'])
 
 /** Posts */
 router.post('post/add', [PostsController, 'add'])
+router.post('post/get/turn', [PostsController, 'getPostsFromTurn'])
 router.post('post/comment/add', [PostsController, 'addComment'])
 router.post('post/comment/delete', [PostsController, 'deleteComment'])
 router.post('post/like', [PostsController, 'like'])
 router.post('post/dislike', [PostsController, 'dislike'])
+router.post('post/vote', [PostsController, 'vote'])
 
 /** Mini-games */
 router.post('mini-game/start', [MiniGamesController, 'start'])

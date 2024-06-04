@@ -27,6 +27,26 @@ export default class PostsController {
     })
   }
 
+  async getPostsFromTurn({ request, response }: HttpContext) {
+    const body = request.body()
+    const firebaseService = await app.container.make('firebaseService')
+
+    return firebaseService.db().collection(`games/${body.gameCode}/turns/${body.currentTurn}/posts`)
+      .get()
+      .then((docs) => {
+        const postsFromTurn: FirebaseFirestore.DocumentData[] = [];
+
+        docs.forEach((doc) => {
+          if (doc.id === body.playerId) {
+            return;
+          }
+          postsFromTurn.push(doc.data());
+        });
+
+        return response.status(200).json({ status: 200, posts: postsFromTurn })
+      })
+  }
+
   /**
    * @addComment
    * @method POST
@@ -126,4 +146,70 @@ export default class PostsController {
         console.log("Failed in dislike", error);
       });
   }
+
+  async vote({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService');
+    const body = request.body()
+    
+    return firebaseService.db()
+      .collection(`games/${body.gameCode}/turns/${body.currentTurn}/votes`).doc(body.playerId).set({
+        for: body.vote
+      })
+      .then(() => {
+        this.checkVotes(body.gameCode, body.currentTurn);
+        return response.status(200).json({ status: 200, message: 'Vote ajouté !' })
+      })
+      .catch((error) => {
+        console.log("Erreur lors de l'ajout du vote : ", error);
+      });
+  }
+
+  async checkVotes(gameCode: number, currentTurn: number) {
+    const firebaseService = await app.container.make('firebaseService');
+
+    interface Occurrences {
+      [id: string]: number;
+    }
+    
+    firebaseService.db()
+      .collection(`games/${gameCode}/turns/${currentTurn}/votes`)
+      .get()
+      .then((docs) => {
+        if (docs.size === 4) {
+          const occurrences: Occurrences = {};
+          let maxOccurrence = 0;
+          const mostFrequentIds: string[] = [];
+  
+          for (const doc of docs.docs) {
+            const id = doc.data().for;
+            occurrences[id] = (occurrences[id] || 0) + 1;
+  
+            if (occurrences[id] > maxOccurrence) {
+              maxOccurrence = occurrences[id];
+              mostFrequentIds.length = 0;
+              mostFrequentIds.push(id);
+            } else if (occurrences[id] === maxOccurrence) {
+              mostFrequentIds.push(id);
+            }
+          }
+  
+          firebaseService.db()
+            .collection(`games/${gameCode}/turns`)
+            .doc(`${currentTurn}`)
+            .update({
+              winner: mostFrequentIds.length > 1 ? 'none' : mostFrequentIds[0]
+            })
+            .then(() => {
+              console.log("Vainqueur désigné !");
+            })
+            .catch((error) => {
+              console.log("Erreur lors de l'ajout du vainqueur : ", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur lors de la comptabilisation des votes : ", error);
+      });
+  }
+
 }
