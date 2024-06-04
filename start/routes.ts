@@ -59,3 +59,4 @@ router.post('post/vote', [PostsController, 'vote'])
 /** Mini-games */
 router.post('mini-game/start', [MiniGamesController, 'start'])
 router.post('mini-game/vote', [MiniGamesController, 'vote'])
+router.post('mini-game/sendVote', [MiniGamesController, 'sendVote'])

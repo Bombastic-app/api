@@ -1,7 +1,7 @@
 import Player from "#models/player";
+import Game from "#models/game";
 import { HttpContext } from "@adonisjs/core/http";
 import { Timestamp } from "firebase-admin/firestore";
-import Game from "#models/game";
 import app from '@adonisjs/core/services/app';
 
 export default class GamesController {
@@ -17,7 +17,7 @@ export default class GamesController {
     const body = request.body()
     const firebaseService = await app.container.make('firebaseService')
     const gamesService = await app.container.make('gamesService')
-    
+
     const gameRef = firebaseService.db().collection("games").doc(body.gameCode)
     const currentGameRef = firebaseService.db().collection('currentGames')
 
@@ -66,9 +66,9 @@ export default class GamesController {
    * @responseBody 500 - { "status": 500, "message": "Veuillez renseigner un code de partie et un pseudo" }
    */
   async join({ request, response }: HttpContext) {
+    const body = request.body()
     const firebaseService = await app.container.make('firebaseService')
     const gamesService = await app.container.make('gamesService')
-    const body = request.body()
 
     if (body.gameCode === undefined || body.gameCode === '' || body.pseudo === undefined || body.pseudo === '') {
       return response.status(500).json({ status: 500, message: 'Veuillez renseigner un code de partie et un pseudo' })
@@ -109,7 +109,7 @@ export default class GamesController {
   async start({ request, response }: HttpContext) {
     const firebaseService = await app.container.make('firebaseService')
     const body = request.body()
-    
+
     return firebaseService.db().collection('games').doc(body.gameCode).update({
       ready: true
     }).then(() => {
@@ -132,6 +132,5 @@ export default class GamesController {
       gamesService.games.get(params.gameCode)!.currentPlayer = gamesService.games.get(params.gameCode)!.players[3]
       gamesService.games.get(params.gameCode)!.currentPlayerIndex = 3
     }, 4000)
-    // this.gamesService.games[0].init()
   }
 }

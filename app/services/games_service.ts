@@ -6,8 +6,6 @@ export default class GamesService {
   
   constructor() {
     app.container.make('firebaseService').then((firebaseService) => {
-      console.log(firebaseService);
-      
       firebaseService.db().collection('currentGames').get().then((currentGames) => {
         currentGames.forEach((currentGame) => {
           this.games.set(currentGame.id, new Game(currentGame.id, firebaseService))

@@ -89,4 +89,36 @@ export default class MiniGamesController {
         console.log("Erreur lors de la comptabilisation des votes : ", error);
       });
   }
+
+  /**
+   * @start
+   * @summary Send vote for one player for current mini game
+   * @method POST
+   * @responseBody 200 - { "status": 200, "message": "Le joueur 2pUYxkCWhjXuygSnq7wD a voté pour LPAlnR2fK2G3Tii6nKOV" }
+   */
+  async sendVote({ request, response }: HttpContext) {
+    const body = request.body()
+    const gamesServices = await app.container.make('gamesService')
+    const firebaseService = await app.container.make('firebaseService')
+
+    const gameService = gamesServices.games.get(body.gameCode)
+
+    firebaseService.db().collection(`games/${gameService?.gameCode}/turns/${gameService?.currentTurn}/miniGame`).doc(body.playerId).set({
+      vote: body.vote,
+      ready: true
+    }).then(() => {
+      console.log(`Le joueur ${body.playerId} a voté pour ${body.vote}`);
+      return response.status(200).json({ status: 200, message: `Le joueur ${body.playerId} a voté pour ${body.vote}` })
+    })
+  } 
+
+  async end({ request, response }: HttpContext) {
+    const body = request.body()
+    const gamesServices = await app.container.make('gamesService')
+    const firebaseService = await app.container.make('firebaseService')
+
+    const gameService = gamesServices.games.get(body.gameCode)
+
+    
+  }
 }
