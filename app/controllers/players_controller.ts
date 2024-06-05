@@ -116,6 +116,25 @@ export default class PlayersController {
   }
 
   /**
+   * @setScore
+   * @method POST
+   * @summary Set score of a specific player
+   */
+  async setScore({ request, response }: HttpContext) {
+    const firebaseService = await app.container.make('firebaseService')
+    const body = request.body()
+
+    return firebaseService.db()
+      .collection(`games/${body.gameCode}/players`).doc(body.playerId)
+      .update({
+        score: body.score
+      })
+      .then(() => {
+        return response.status(200).json({ status: 200, message: 'Score mis à jour' })
+      })
+  }
+
+  /**
    * @getScore
    * @method GET
    * @summary Get score of a specific player
