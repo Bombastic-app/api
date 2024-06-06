@@ -53,7 +53,7 @@ export default class MiniGamesController {
       .collection(`games/${gameCode}/turns/${currentTurn}/miniGameVotes`)
       .get()
       .then((docs) => {
-        if (docs.size === 2) {
+        if (docs.size === 4) {
           const occurrences: Occurrences = {};
           let maxOccurrence = 0;
           const mostFrequentIds: string[] = [];
