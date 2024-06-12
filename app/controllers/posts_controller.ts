@@ -3,28 +3,32 @@ import app from '@adonisjs/core/services/app';
 import { Timestamp } from 'firebase-admin/firestore'
 
 export default class PostsController {
-  constructor() {}
+  constructor() { }
 
   async add(context: HttpContext) {
     const body = context.request.body()
     const firebaseService = await app.container.make('firebaseService')
     const gamesService = await app.container.make('gamesService')
     const gameService = gamesService.games.get(body.gameCode)
-
-    return firebaseService.db().collection(`games/${body.gameCode}/turns/${gameService?.currentTurn}/posts`).doc(body.playerId).set({
-      type: body.type,
-      content: body.content,
-      playerId: body.playerId,
-      pseudo: body.pseudo,
-      likes: 0,
-      dislikes: 0,
-      timestamp: Timestamp.fromMillis(Date.now())
-    }).then(() => {
-      const gameService = gamesService.games.get(body.gameCode)
-
+    if (body.type === 'event') {
       gameService?.nextPlayer(context)
-      return context.response.status(200).json({ status: 200, message: 'Post ajouté !' })
-    })
+      return context.response.status(200).json({ status: 200, message: 'Carte Action jouée !' })
+    } else {
+      return firebaseService.db().collection(`games/${body.gameCode}/turns/${gameService?.currentTurn}/posts`).doc(body.playerId).set({
+        type: body.type,
+        content: body.content,
+        playerId: body.playerId,
+        pseudo: body.pseudo,
+        likes: 0,
+        dislikes: 0,
+        timestamp: Timestamp.fromMillis(Date.now())
+      }).then(() => {
+        const gameService = gamesService.games.get(body.gameCode)
+
+        gameService?.nextPlayer(context)
+        return context.response.status(200).json({ status: 200, message: 'Post ajouté !' })
+      })
+    }
   }
 
   async getPostsFromTurn({ request, response }: HttpContext) {
@@ -150,7 +154,7 @@ export default class PostsController {
   async vote({ request, response }: HttpContext) {
     const firebaseService = await app.container.make('firebaseService');
     const body = request.body()
-    
+
     return firebaseService.db()
       .collection(`games/${body.gameCode}/turns/${body.currentTurn}/votes`).doc(body.playerId).set({
         for: body.vote
@@ -164,26 +168,29 @@ export default class PostsController {
       });
   }
 
-  async checkVotes(gameCode: number, currentTurn: number) {
+  async checkVotes(gameCode: string, currentTurn: number) {
     const firebaseService = await app.container.make('firebaseService');
+    const gamesService = await app.container.make('gamesService')
+
+    const gameService = gamesService.games.get(gameCode)
 
     interface Occurrences {
       [id: string]: number;
     }
-    
+
     firebaseService.db()
       .collection(`games/${gameCode}/turns/${currentTurn}/votes`)
       .get()
       .then((docs) => {
-        if (docs.size === 4) {
+        if (docs.size === gameService?.players.length) {
           const occurrences: Occurrences = {};
           let maxOccurrence = 0;
           const mostFrequentIds: string[] = [];
-  
+
           for (const doc of docs.docs) {
             const id = doc.data().for;
             occurrences[id] = (occurrences[id] || 0) + 1;
-  
+
             if (occurrences[id] > maxOccurrence) {
               maxOccurrence = occurrences[id];
               mostFrequentIds.length = 0;
@@ -192,7 +199,7 @@ export default class PostsController {
               mostFrequentIds.push(id);
             }
           }
-  
+
           firebaseService.db()
             .collection(`games/${gameCode}/turns`)
             .doc(`${currentTurn}`)

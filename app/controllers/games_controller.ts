@@ -133,4 +133,59 @@ export default class GamesController {
       gamesService.games.get(params.gameCode)!.currentPlayerIndex = 3
     }, 4000)
   }
+
+  /**
+   * 
+   * @setTitles
+   * @summary Set players with the more of each statistics for the current turn
+   * @method POST
+   */
+  async setTitles({ request, response }: HttpContext) {
+    const body = request.body()
+    const firebaseService = await app.container.make('firebaseService')
+    const gamesService = await app.container.make('gamesService')
+
+    const gameService = gamesService.games.get(body.gameCode)
+    
+    const currentTurnTitles: any = {
+      reputation: '',
+      followers: '',
+      money: ''
+    }
+
+    return firebaseService.db().collection(`games/${body.gameCode}/players`).get().then((players) => {
+      let maxReputation = 0
+      let maxFollowers = 0
+      let maxMoney = 0
+
+      players.docs.forEach((player) => {
+        if (player.data().reputation > maxReputation) {
+          maxReputation = player.data().reputation
+          currentTurnTitles['reputation'] = player.data().uid
+        }
+        if (player.data().followers > maxFollowers) {
+          maxFollowers = player.data().followers
+          currentTurnTitles['followers'] = player.data().uid
+        }
+        if (player.data().money > maxMoney) {
+          maxMoney = player.data().money
+          currentTurnTitles['money'] = player.data().uid
+        }
+      })
+    }).then(() => {
+      firebaseService.db().collection(`games/${body.gameCode}/turns`).doc(`1`).update({
+        reputation: currentTurnTitles['reputation'],
+        followers: currentTurnTitles['followers'],
+        money: currentTurnTitles['money']
+      })
+      return response.status(200).json({ message: 'Gagnant des statistiques OK' })
+    }).catch((error) => {
+      return response.status(500).json({ message: 'Erreur lors de la désignation des gagnants des statistiques', error: error })
+    })
+
+    // Get players and compare their statistics (reputation, followers, money)
+    // Set the player with the most of each statistics as the winner of the turn
+
+
+  }
 }
