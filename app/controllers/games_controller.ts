@@ -143,9 +143,6 @@ export default class GamesController {
   async setTitles({ request, response }: HttpContext) {
     const body = request.body()
     const firebaseService = await app.container.make('firebaseService')
-    const gamesService = await app.container.make('gamesService')
-
-    const gameService = gamesService.games.get(body.gameCode)
     
     const currentTurnTitles: any = {
       reputation: '',
